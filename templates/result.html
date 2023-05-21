@@ -12,11 +12,10 @@
         </audio>
     </div>
     <div align="center">
-        <form method="post">
-            <label for="guess">Your guess:</label>
-            <input type="text" id="guess" name="guess"><br><br>
-            <input type="submit" value="Submit">
+        <form action="/" method="get">
+            <input type="submit" value="Guess another song">
         </form>
         <p>{{ result_message }}</p>
+        <p>{{ score_message }}</p>
     </div>
 </body>
