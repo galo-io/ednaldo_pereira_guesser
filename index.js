@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     scoreMessage.textContent = `Your score: ${score}`;
 
-    if (window.location.pathname == "/") {
+    if (window.location.pathname == "/ednaldo_pereira_guesser/") {
         chooseSong();
         guessForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
