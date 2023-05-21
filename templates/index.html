@@ -6,10 +6,11 @@
 <body>
     <h1>Guess Ednaldo Pereira</h1>
     <div align="center">
-        <audio controls>
+        <audio id="player">
         <source src="{{ song_url }}" type="audio/webm">
         Your browser does not support the audio element.
         </audio>
+        <button onclick="playRandomSecond()">Play</button>
     </div>
     <div align="center">
         <form action="/result" method="post">
@@ -20,3 +21,23 @@
         <p>{{ score_message }}</p>
     </div>
 </body>
+
+<script>
+    var randomSecond = null; // Declare the randomSecond variable outside the function
+
+    function playRandomSecond() {
+        var audio = document.getElementById("player");
+
+        if (randomSecond === null) { // Check if randomSecond is null (first click)
+            var duration = audio.duration; // Get the total duration of the audio in seconds
+            randomSecond = Math.floor(Math.random() * duration); // Generate a random second within the duration
+        }
+
+        audio.currentTime = randomSecond; // Set the current time to the random second
+        audio.play(); // Play the audio
+        setTimeout(function() {
+            audio.pause(); // Pause the audio after one second
+            audio.currentTime = 0; // Reset the current time to the beginning
+        }, 1000);
+    }
+</script>
