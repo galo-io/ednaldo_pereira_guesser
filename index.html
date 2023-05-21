@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+    <script src="index.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "static/styles/index.css">
+    <title>Guess Ednaldo Pereira</title>
+</head>
+<body>
+    <h1>Guess Ednaldo Pereira</h1>
+    <div align="center">
+        <audio id="player"></audio>
+        <button onclick="playRandomSecond()">Play</button>
+    </div>
+    <div align="center">
+        <form action="/result.html" id="form" method="post">
+            <label for="guess">Your guess:</label>
+            <input type="text" id="guess" name="guess"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <p id="scoreMessage"></p>
+    </div>
+</body>
+</html>

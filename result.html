@@ -1,13 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <head>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+    <script src="index.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "static/styles/index.css">
     <title>Guess Ednaldo Pereira</title>
 </head>
 <body>
     <h1>Guess Ednaldo Pereira</h1>
     <div align="center">
-        <audio controls>
-        <source src="{{ song_url }}" type="audio/webm">
+        <audio id="player" controls>
         Your browser does not support the audio element.
         </audio>
     </div>
@@ -15,7 +15,8 @@
         <form action="/" method="get">
             <input type="submit" value="Guess another song">
         </form>
-        <p>{{ result_message }}</p>
-        <p>{{ score_message }}</p>
+        <p id="scoreMessage"></p>
+        <p id="resultMessage"></p>
     </div>
 </body>
+</html>
