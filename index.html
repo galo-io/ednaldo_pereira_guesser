@@ -7,16 +7,23 @@
 <body>
     <h1>Guess Ednaldo Pereira</h1>
     <div align="center">
+        <p>Can you guess the Ednaldo Pereira song from a 1-second sample?</p><br>
         <audio id="player"></audio>
-        <button onclick="playRandomSecond()">Play</button>
+        <button class="btn btn--stripe" onclick="playRandomSecond()">Play ⏵</button>
     </div>
     <div align="center">
         <form action="./result.html" id="form"">
             <label for="guess">Your guess:</label>
-            <input type="text" id="guess" name="guess"><br><br>
-            <input type="submit" value="Submit">
+            <input type="text" id="guess" name="guess" autocomplete="false"><br><br>
+            <input class="btn btn--stripe" type="submit" value="Submit">
         </form>
         <p id="scoreMessage"></p>
+    </div>
+    <div align="center">
+        <p>Follow us on Twitter:</p><br>
+        <a href="https://twitter.com/galo_io" target="_blank">
+            <img src="./static/assets/twitter-logo.png" width="30" height="30">
+        </a>
     </div>
 </body>
 </html>

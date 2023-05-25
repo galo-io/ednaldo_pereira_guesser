@@ -23,9 +23,7 @@ function getChosenSong() {
     return storedSong ? storedSong : 0;
 }
 
-
 function playRandomSecond() {
-    var messageElement = document.getElementById("scoreMessage");
     var audio = document.getElementById("player");
 
     if (randomSecond === null) { // Check if randomSecond is null (first click)
@@ -52,6 +50,43 @@ function chooseSong() {
     audio.type = 'audio/webm';
 }
 
+function levenshteinDistance(str1, str2) {
+    const m = str1.length;
+    const n = str2.length;
+    
+    // Create a 2D array to store the distances
+    const dp = [];
+    for (let i = 0; i <= m; i++) {
+      dp[i] = new Array(n + 1).fill(0);
+    }
+    
+    // Initialize the first row and column of the matrix
+    for (let i = 0; i <= m; i++) {
+      dp[i][0] = i;
+    }
+    for (let j = 0; j <= n; j++) {
+      dp[0][j] = j;
+    }
+    
+    // Fill in the rest of the matrix
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (str1[i - 1] === str2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = 1 + Math.min(
+            dp[i - 1][j - 1], // substitution
+            dp[i][j - 1],     // insertion
+            dp[i - 1][j]      // deletion
+          );
+        }
+      }
+    }
+    
+    // The Levenshtein distance is the value in the bottom right cell of the matrix
+    return dp[m][n];
+  }
+
 
 document.addEventListener('DOMContentLoaded', function() {
     var score = getScore();
@@ -63,59 +98,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     scoreMessage.textContent = `Your score: ${score}`;
 
-    if (window.location.pathname == "/ednaldo_pereira_guesser/" || window.location.pathname == "/") {
-        chooseSong();
-        guessForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            var userGuess = songGuessInput.value.trim();
-            var correctSong = getChosenSong();
-            var redirectURL = guessForm.action;
-            window.location.href = redirectURL;
-            if (userGuess == correctSong) {
-                score++;
-                sessionStorage.setItem('score', score);
-                msg = `You got it! The song was ${correctSong}`;
-                sessionStorage.setItem('resultMessage', msg);
-            } else {
-                score = 0;
-                sessionStorage.setItem('score', score);
-                msg = `The song was ${correctSong}`;
-                sessionStorage.setItem('resultMessage', msg);
-            }
-            songGuessInput.value = '';
-        });
-    } else {
-        chosenSong = getChosenSong();
-        console.log(chosenSong);
-        audioPlayer.src = `static/assets/${chosenSong}.webm`;
-        audioPlayer.type = 'audio/webm';
-        console.log(msg);
-        var resultMessage = document.getElementById('resultMessage');
-        resultMessage.textContent = sessionStorage['resultMessage'];
-    }
-    
-  });
-// On loaded window:
-/* document.addEventListener('DOMContentLoaded', function() {
-    var scoreElement = document.getElementById('scoreMessage');
-    var form = document.getElementById('form');
-    var audio = document.getElementById('player');
-    if (window.location.pathname == '/') {
-        chooseSong();
-    } else {
-        //audio.src = chosenSong;
-        audio.type = 'audio/webm';
-    }
 
-
-    scoreElement.textContent = `Your score: ${score}`;
-    
-    form.addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent the default form submission
-      
-      // Perform any necessary form validation or processing here
-      
-      // Redirect the user to /result
-      window.location.href = '/result';
+    chooseSong();
+    guessForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var userGuess = songGuessInput.value.trim().toLowerCase();
+        var correctSong = getChosenSong();
+        var redirectURL = guessForm.action;
+        window.location.href = redirectURL;
+        var d = levenshteinDistance(userGuess, correctSong);
+        if (d <= 3) {
+            score++;
+            sessionStorage.setItem('score', score);
+            msg = `You got it! The song was ${correctSong}`;
+        } else {
+            score = 0;
+            sessionStorage.setItem('score', score);
+            msg = `You lose :( The song was ${correctSong}`;
+        }
+        sessionStorage.setItem('resultMessage', msg);
+        songGuessInput.value = '';
     });
-  }); */
+  });

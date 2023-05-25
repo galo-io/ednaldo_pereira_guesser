@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <head>
-    <script src="index.js"></script>
+    <script src="result.js"></script>
     <link rel= "stylesheet" type= "text/css" href= "static/styles/index.css">
     <title>Guess Ednaldo Pereira</title>
 </head>
 <body>
     <h1>Guess Ednaldo Pereira</h1>
     <div align="center">
+        <p id="resultMessage"></p>
         <audio id="player" controls>
         Your browser does not support the audio element.
         </audio>
     </div>
     <div align="center">
         <form action="./" method="get">
-            <input type="submit" value="Guess another song">
+            <input class="btn btn--stripe" type="submit" value="Guess another song">
         </form>
         <p id="scoreMessage"></p>
-        <p id="resultMessage"></p>
     </div>
 </body>
 </html>
