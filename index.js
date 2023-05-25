@@ -40,7 +40,8 @@ function chooseSong() {
     var randomIndex = Math.floor(Math.random() * songs.length);
     var randomSong = songs[randomIndex];
     sessionStorage.setItem('chosenSong', randomSong);
-    audio.src = `static/assets/${randomSong}.webm`;
+    console.log(sessionStorage['chosenSong']);
+    audio.src = `./static/assets/${randomSong}.webm`;
     audio.type = 'audio/webm';
 }
 
