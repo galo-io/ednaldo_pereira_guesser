@@ -1,9 +1,16 @@
 var randomSecond = null; // Declare the randomSecond variable outside the function
 var chosenSong = null;
 var songs = [
+    'banido desbanido',
     'chance',
     'cidade capital',
-    'homens que entraram no vagão'
+    'god is good',
+    'homens que entraram no vagão',
+    'invenção',
+    'mesclado',
+    'mulher contrariada',
+    'vale nada vale tudo',
+    'what is the brother'
 ];
 
 function getScore() {
@@ -52,24 +59,28 @@ document.addEventListener('DOMContentLoaded', function() {
     var audioPlayer = document.getElementById('player');
     var guessForm = document.getElementById('form');
     var songGuessInput = document.getElementById('guess');
+    var msg;
     
     scoreMessage.textContent = `Your score: ${score}`;
 
-    if (window.location.pathname == "/ednaldo_pereira_guesser/") {
+    if (window.location.pathname == "/ednaldo_pereira_guesser/" || window.location.pathname == "/") {
         chooseSong();
         guessForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             var userGuess = songGuessInput.value.trim();
             var correctSong = getChosenSong();
-            console.log(correctSong)
             var redirectURL = guessForm.action;
             window.location.href = redirectURL;
             if (userGuess == correctSong) {
                 score++;
                 sessionStorage.setItem('score', score);
+                msg = `You got it! The song was ${correctSong}`;
+                sessionStorage.setItem('resultMessage', msg);
             } else {
                 score = 0;
                 sessionStorage.setItem('score', score);
+                msg = `The song was ${correctSong}`;
+                sessionStorage.setItem('resultMessage', msg);
             }
             songGuessInput.value = '';
         });
@@ -78,6 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(chosenSong);
         audioPlayer.src = `static/assets/${chosenSong}.webm`;
         audioPlayer.type = 'audio/webm';
+        console.log(msg);
+        var resultMessage = document.getElementById('resultMessage');
+        resultMessage.textContent = sessionStorage['resultMessage'];
     }
     
   });
