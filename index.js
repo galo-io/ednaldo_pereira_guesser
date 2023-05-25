@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     scoreMessage.textContent = `Your score: ${score}`;
 
-    if (window.location.pathname == "/") {
+    if (window.location.pathname == "/ednaldo_pereira_guesser/") {
         chooseSong();
         guessForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
             songGuessInput.value = '';
         });
     } else {
-        const urlParams = new URLSearchParams(window.location.search);
         chosenSong = getChosenSong();
         console.log(chosenSong);
         audioPlayer.src = `static/assets/${chosenSong}.webm`;
