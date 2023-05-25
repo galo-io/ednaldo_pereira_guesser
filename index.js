@@ -7,12 +7,12 @@ var songs = [
 ];
 
 function getScore() {
-    var storedScore = localStorage.getItem('score');
+    var storedScore = sessionStorage.getItem('score');
     return storedScore ? parseInt(storedScore, 10) : 0;
 }
 
 function getChosenSong() {
-    var storedSong = localStorage.getItem('chosenSong');
+    var storedSong = sessionStorage.getItem('chosenSong');
     return storedSong ? storedSong : 0;
 }
 
@@ -39,7 +39,7 @@ function chooseSong() {
 
     var randomIndex = Math.floor(Math.random() * songs.length);
     var randomSong = songs[randomIndex];
-    localStorage.setItem('chosenSong', randomSong);
+    sessionStorage.setItem('chosenSong', randomSong);
     audio.src = `static/assets/${randomSong}.webm`;
     audio.type = 'audio/webm';
 }
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     scoreMessage.textContent = `Your score: ${score}`;
 
-    if (window.location.pathname == "/ednaldo_pereira_guesser/") {
+    if (window.location.pathname == "/") {
         chooseSong();
         guessForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = redirectURL;
             if (userGuess == correctSong) {
                 score++;
-                localStorage.setItem('score', score);
+                sessionStorage.setItem('score', score);
             } else {
                 score = 0;
-                localStorage.setItem('score', score);
+                sessionStorage.setItem('score', score);
             }
             songGuessInput.value = '';
         });
