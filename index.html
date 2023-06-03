@@ -6,18 +6,25 @@
 </head>
 <body>
     <h1>Guess Ednaldo Pereira</h1>
+    <button id="infoButton">How to Play</button>
+    <div id="overlay">
+        <div id="infoBox">
+            <textarea id="howToPlay">This is the information text.</textarea>
+            <button id="closeButton">Close</button>
+        </div>
+    </div>
     <div align="center">
         <p>Can you guess the Ednaldo Pereira song from a 1-second sample?</p><br>
         <audio id="player"></audio>
         <button class="btn btn--stripe" onclick="playRandomSecond()">Play ⏵</button>
     </div>
     <div align="center">
-        <form action="./result.html" id="form" autocomplete="off">
-            <label for="guess">Your guess:</label>
-            <input type="text" id="guess" name="guess"><br><br>
-            <input class="btn btn--stripe" type="submit" value="Submit">
-        </form>
-        <p id="scoreMessage"></p>
+        <label for="guess">Your guess:</label>
+        <input type="text" id="guess" name="guess" placeholder="Type your guess..."><br><br>
+        <button class="btn btn--stripe" onclick="processGuess()" type="submit">Submit</button>    
+    </div>
+    <div align="center">
+        <p id="chancesMessage"></p>
     </div>
     <div align="center">
         <p>Follow galo.io on Twitter:</p><br>

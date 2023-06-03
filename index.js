@@ -1,5 +1,6 @@
 var randomSecond = null; // Declare the randomSecond variable outside the function
 var chosenSong = null;
+var timeout = 1000;
 var songs = [
     'banido desbanido',
     'chance',
@@ -12,6 +13,34 @@ var songs = [
     'vale nada vale tudo',
     'what is the brother'
 ];
+
+function howToPlay() {
+  return ` Click in the "Play ⏵" button to hear a sample from a random Ednaldo Pereira song. Insert your guess and submit. You have 3 chances to guess the correct song. For each wrong guess, you can listen to one additional second. 
+  ` 
+}
+
+async function getgit (owner, repo, path) { 
+  // A function to fetch files from github using the api 
+  
+let data = await fetch (
+  `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+)
+  .then (d => d.json ())
+  .then (d =>
+    fetch (
+      `https://api.github.com/repos/${owner}/${repo}/git/blobs/${d.sha}`
+    )
+  )
+  .then (d => d.json ())
+  .then (d => JSON.parse (atob (d.content)));
+
+return data;
+}
+
+function getChances() {
+  var storedChances = sessionStorage.getItem('chances');
+  return storedChances ? parseInt(storedChances, 10) : 0;
+}
 
 function getScore() {
     var storedScore = sessionStorage.getItem('score');
@@ -35,8 +64,7 @@ function playRandomSecond() {
     audio.play(); // Play the audio
     setTimeout(function() {
         audio.pause(); // Pause the audio after one second
-        audio.currentTime = 0; // Reset the current time to the beginning
-    }, 1000);
+    }, timeout);
 };
 
 function chooseSong() {
@@ -87,36 +115,70 @@ function levenshteinDistance(str1, str2) {
     return dp[m][n];
   }
 
+function validateGuess(userGuess) {
+  const correctSong = getChosenSong();
+  const d = levenshteinDistance(correctSong, userGuess)
+  return (d <= 3) ? true : false;
+}
+
+function processGuess() {
+  inputField = document.getElementById('guess');
+  userGuess = inputField.value;
+  if (userGuess.trim() === '') {return;}
+  result = validateGuess(userGuess);
+  var redirectURL = "./result.html";
+  var score = getScore();
+  if (result) {
+    score++;
+    inputField.style.background = '#00FF0080';
+    sessionStorage.setItem('score', score);
+    var msg = `You got it! The song was ${getChosenSong()}`;
+    window.location.href = redirectURL;
+  } else {
+      inputField = document.getElementById('guess');
+      inputField.style.background = '#FF000080';
+      timeout += 1000;
+      chances = chances - 1;
+      sessionStorage.setItem('chances', chances);
+      chancesMessage.textContent = `You have ${chances} chances`;
+      if (chances === 0) {
+        score = 0;
+        sessionStorage.setItem('score', score);
+        var msg = `You lose :( The song was ${getChosenSong()}`;
+        window.location.href = redirectURL;
+      }
+  }
+  sessionStorage.setItem('resultMessage', msg);
+  userGuess.value = '';
+}
 
 document.addEventListener('DOMContentLoaded', function() {
-    var score = getScore();
-    var scoreMessage = document.getElementById('scoreMessage');
-    var audioPlayer = document.getElementById('player');
-    var guessForm = document.getElementById('form');
-    var songGuessInput = document.getElementById('guess');
-    var msg;
-    
-    scoreMessage.textContent = `Your score: ${score}`;
+  var infoButton = document.getElementById('infoButton');
+  var overlay = document.getElementById('overlay');
+  var closeButton = document.getElementById('closeButton');
+  var chancesMessage = document.getElementById('chancesMessage');
+  var input = document.getElementById('guess');
+  tutorial = document.getElementById('howToPlay');
+  tutorial.value = howToPlay();
+  sessionStorage.setItem('chances', 3);
+  chances = getChances();
+  chancesMessage.textContent = `You have ${chances} chances`;
+  
+  chooseSong();
 
-
-    chooseSong();
-    guessForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
-        var userGuess = songGuessInput.value.trim().toLowerCase();
-        var correctSong = getChosenSong();
-        var redirectURL = guessForm.action;
-        window.location.href = redirectURL;
-        var d = levenshteinDistance(userGuess, correctSong);
-        if (d <= 3) {
-            score++;
-            sessionStorage.setItem('score', score);
-            msg = `You got it! The song was ${correctSong}`;
-        } else {
-            score = 0;
-            sessionStorage.setItem('score', score);
-            msg = `You lose :( The song was ${correctSong}`;
-        }
-        sessionStorage.setItem('resultMessage', msg);
-        songGuessInput.value = '';
-    });
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      processGuess();
+    }
   });
+
+  infoButton.addEventListener('click', function() {
+    overlay.style.display = 'flex';
+  });
+
+  closeButton.addEventListener('click', function() {
+    overlay.style.display = 'none';
+  });
+
+});
