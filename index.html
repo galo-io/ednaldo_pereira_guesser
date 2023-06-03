@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Guess Ednaldo Pereira</h1>
-    <button id="infoButton">How to Play</button>
+    <button class="btn btn--stripe" id="infoButton">How to Play</button>
     <div id="overlay">
         <div id="infoBox">
             <textarea id="howToPlay">This is the information text.</textarea>
@@ -20,10 +20,12 @@
     </div>
     <div align="center">
         <label for="guess">Your guess:</label>
-        <input type="text" id="guess" name="guess" placeholder="Type your guess..."><br><br>
+        <input type="text" id="guess" name="guess" list="suggestions" placeholder="Type your guess..."><br><br>
+        <datalist id="suggestions"></datalist>
         <button class="btn btn--stripe" onclick="processGuess()" type="submit">Submit</button>    
     </div>
     <div align="center">
+        <p id="warnMessage"></p>
         <p id="chancesMessage"></p>
     </div>
     <div align="center">

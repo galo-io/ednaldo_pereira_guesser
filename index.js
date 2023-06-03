@@ -1,6 +1,6 @@
 var randomSecond = null; // Declare the randomSecond variable outside the function
 var chosenSong = null;
-var timeout = 1000;
+var timeout = 4000;
 var songs = [
     'banido desbanido',
     'chance',
@@ -17,24 +17,6 @@ var songs = [
 function howToPlay() {
   return ` Click in the "Play ⏵" button to hear a sample from a random Ednaldo Pereira song. Insert your guess and submit. You have 3 chances to guess the correct song. For each wrong guess, you can listen to one additional second. 
   ` 
-}
-
-async function getgit (owner, repo, path) { 
-  // A function to fetch files from github using the api 
-  
-let data = await fetch (
-  `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
-)
-  .then (d => d.json ())
-  .then (d =>
-    fetch (
-      `https://api.github.com/repos/${owner}/${repo}/git/blobs/${d.sha}`
-    )
-  )
-  .then (d => d.json ())
-  .then (d => JSON.parse (atob (d.content)));
-
-return data;
 }
 
 function getChances() {
@@ -74,7 +56,7 @@ function chooseSong() {
     var randomSong = songs[randomIndex];
     sessionStorage.setItem('chosenSong', randomSong);
     console.log(sessionStorage['chosenSong']);
-    audio.src = `./static/assets/${randomSong}.webm`;
+    audio.src =  `./static/assets/${randomSong}.webm`;
     audio.type = 'audio/webm';
 }
 
@@ -115,17 +97,25 @@ function levenshteinDistance(str1, str2) {
     return dp[m][n];
   }
 
-function validateGuess(userGuess) {
+function checkGuess(userGuess) {
   const correctSong = getChosenSong();
   const d = levenshteinDistance(correctSong, userGuess)
   return (d <= 3) ? true : false;
 }
 
+function validateGuess(userGuess) {
+  return songs.includes(userGuess);
+}
+
 function processGuess() {
   inputField = document.getElementById('guess');
-  userGuess = inputField.value;
-  if (userGuess.trim() === '') {return;}
-  result = validateGuess(userGuess);
+  userGuess = inputField.value.trim();
+  if (userGuess === '') {return;}
+  if (!songs.includes(userGuess)) {
+    var warnMessage = "Input a valid song."
+    return;
+  }
+  result = checkGuess(userGuess);
   var redirectURL = "./result.html";
   var score = getScore();
   if (result) {
@@ -158,12 +148,29 @@ document.addEventListener('DOMContentLoaded', function() {
   var closeButton = document.getElementById('closeButton');
   var chancesMessage = document.getElementById('chancesMessage');
   var input = document.getElementById('guess');
+  var datalist = document.getElementById('suggestions');
   tutorial = document.getElementById('howToPlay');
   tutorial.value = howToPlay();
   sessionStorage.setItem('chances', 3);
   chances = getChances();
   chancesMessage.textContent = `You have ${chances} chances`;
   
+  input.addEventListener('input', function() {
+    fieldValue = input.value.trim();
+    if (fieldValue !== '') {
+      datalist.innerHTML = '';
+      songs.forEach(function(song) {
+        if (song.slice(0, fieldValue.length) == fieldValue) {
+          var option = document.createElement('option');
+          option.value = song;
+          datalist.appendChild(option);
+        }
+      });
+    } else {
+      datalist.innerHTML = '';
+    }
+  });
+
   chooseSong();
 
   input.addEventListener('keydown', function(event) {
